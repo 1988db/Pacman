@@ -1,3 +1,11 @@
 body {
     background-color: wheat;
 }
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 560px;
+    height: 560px;
+    border: 1px solid black;
+}
