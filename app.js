@@ -57,11 +57,11 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
             if(layout[i] === 0) {
                 squares[i].classList.add('pac-dot');
-            } else if (layout[i] === 1) {
+            } else if(layout[i] === 1) {
                 squares[i].classList.add('wall');
-            } else if (layout[i] === 2) {
+            } else if(layout[i] === 2) {
                 squares[i].classList.add('ghost');
-            } else if (layout[i] === 3) {
+            } else if(layout[i] === 3) {
                 squares[i].classList.add('power-pellet');
             }          
         }
@@ -74,4 +74,34 @@ document.addEventListener('DOMContentLoaded', ()=> {
     let pacmanCurrentIndex = 490;
 
     squares[pacmanCurrentIndex].classList.add('pac-man');
+
+    //move pac-man
+
+    function movePacman(e) {
+        squares[pacmanCurrentIndex].classList.remove('pac-man');
+
+        switch(e.keyCode) {
+            case 37:
+                if(pacmanCurrentIndex % width !== 0 && !squares[pacmanCurrentIndex -1].classList.contains('wall')) pacmanCurrentIndex -=1;
+                break;
+            case 38:
+                if(pacmanCurrentIndex - width >=0 && !squares[pacmanCurrentIndex -width].classList.contains('wall')) pacmanCurrentIndex -= width;
+                break;
+            case 39:
+                if(pacmanCurrentIndex % width < width -1 && !squares[pacmanCurrentIndex +1].classList.contains('wall')) pacmanCurrentIndex += 1;
+                break;
+            case 40:
+                if(pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains('wall')) pacmanCurrentIndex += width;
+                break;
+        }
+
+        squares[pacmanCurrentIndex].classList.add('pac-man');
+
+        //pacDotEaten()
+        //powerPelletEaten()
+        //checkForGameOver()
+        //checkForWin
+    }
+
+    document.addEventListener('keydown', movePacman);
 })
