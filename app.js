@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
             } else if(layout[i] === 1) {
                 squares[i].classList.add('wall');
             } else if(layout[i] === 2) {
-                squares[i].classList.add('ghost');
+                squares[i].classList.add('ghost-liar');
             } else if(layout[i] === 3) {
                 squares[i].classList.add('power-pellet');
             }          
@@ -80,18 +80,25 @@ document.addEventListener('DOMContentLoaded', ()=> {
     function movePacman(e) {
         squares[pacmanCurrentIndex].classList.remove('pac-man');
 
-        switch(e.keyCode) {
+        switch(e.keyCode) {      
+            
             case 37:
-                if(pacmanCurrentIndex % width !== 0 && !squares[pacmanCurrentIndex -1].classList.contains('wall')) pacmanCurrentIndex -=1;
-                break;
+                if(pacmanCurrentIndex % width !== 0 && !squares[pacmanCurrentIndex -1].classList.contains('wall')
+                && !squares[pacmanCurrentIndex -1].classList.contains('ghost-liar')) pacmanCurrentIndex -=1;
+                if(pacmanCurrentIndex === 364) pacmanCurrentIndex = 391; //if packman is in the left exit go to the right side od the board                
+                break;            
             case 38:
-                if(pacmanCurrentIndex - width >=0 && !squares[pacmanCurrentIndex -width].classList.contains('wall')) pacmanCurrentIndex -= width;
+                if(pacmanCurrentIndex - width >=0 && !squares[pacmanCurrentIndex -width].classList.contains('wall')
+                && !squares[pacmanCurrentIndex -width].classList.contains('ghost-liar')) pacmanCurrentIndex -= width;
                 break;
             case 39:
-                if(pacmanCurrentIndex % width < width -1 && !squares[pacmanCurrentIndex +1].classList.contains('wall')) pacmanCurrentIndex += 1;
+                if(pacmanCurrentIndex % width < width -1 && !squares[pacmanCurrentIndex +1].classList.contains('wall')
+                && !squares[pacmanCurrentIndex +1].classList.contains('ghost-liar')) pacmanCurrentIndex += 1;
+                if(pacmanCurrentIndex === 391) pacmanCurrentIndex = 364;
                 break;
             case 40:
-                if(pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains('wall')) pacmanCurrentIndex += width;
+                if(pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains('wall')
+                && !squares[pacmanCurrentIndex +width].classList.contains('ghost-liar')) pacmanCurrentIndex += width;
                 break;
         }
 
