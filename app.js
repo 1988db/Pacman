@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const grid = document.querySelector('.grid');
     const scoreDisplay = document.getElementById('score');
     width = 28; //28*28=784 squares
-
+    let score = 0;
     //layout of our grid and what is in the squares
 
     const layout = [
@@ -104,11 +104,20 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
         squares[pacmanCurrentIndex].classList.add('pac-man');
 
-        //pacDotEaten()
+        pacDotEaten()
         //powerPelletEaten()
         //checkForGameOver()
         //checkForWin
     }
 
     document.addEventListener('keydown', movePacman);
+
+    //what happens when Pacman eats a pacdot
+    function pacDotEaten() {
+        if(squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
+            score++;
+            scoreDisplay.innerHTML = score;
+            squares[pacmanCurrentIndex].classList.remove('pac-dot');
+        }
+    }
 })
