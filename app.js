@@ -127,4 +127,57 @@ document.addEventListener('DOMContentLoaded', ()=> {
             squares[pacmanCurrentIndex].classList.remove('pac-dot');
         }
     }
+
+    //create our ghost template
+    
+    class Ghost {
+        constructor(className, startIndex, speed) {
+            this.className = className;
+            this.startIndex = startIndex;
+            this.speed = speed;
+            this.currentIndex = startIndex;
+            this.timerId = NaN;
+        }
+    }
+
+    ghosts = [
+        new Ghost('blinky', 348, 250),
+        new Ghost('pinky', 376, 400),
+        new Ghost('inky', 351, 300),
+        new Ghost('clyde', 379, 500)
+    ]
+
+    //draw the ghosts onto the grid
+
+    ghosts.forEach(ghost => {
+        squares[ghost.currentIndex].classList.add(ghost.className);
+        squares[ghost.currentIndex].classList.add('ghost');
+    });
+
+    //move ghosts randomly
+
+    ghosts.forEach(ghost => moveGhost(ghost));
+
+    //function to move ghosts
+
+    function moveGhost(ghost) {
+        const directions = [-1, 1, width, -width];
+        let direction = directions[Math.floor(Math.random() * directions.length)];
+
+        ghost.timerId = setInterval(function() {
+            //if the next square your ghost is going to go in does not contain a wall or ghost, you can go there
+            if(!squares[ghost.currentIndex + direction].classList.contains('wall') && !squares[ghost.currentIndex + direction].classList.contains('ghost')) {
+                //you can go there
+                //remove all ghost related classes
+                squares[ghost.currentIndex].classList.remove(ghost.className, 'ghost', 'scared-ghost');
+                //change the current index to the new safe square
+                ghost.currentIndex += direction;
+                //redraw the ghost in the new safe place
+                squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+            } else {  //else find new direction
+                direction = directions[Math.floor(Math.random() * directions.length)];
+            }           
+        }, ghost.speed)
+    }
+
 })
