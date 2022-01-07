@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
         powerPelletEaten()
         //check if the ghost is scared and packman runs into it
         ghosts.forEach(ghost => checkGhostEaten(ghost));
-        //checkForGameOver()
-        //checkForWin
+        checkForGameOver();
+        checkForWin();
     }
 
     document.addEventListener('keydown', movePacman);
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
             
             //if the ghost is scared and ghost runs into pacman
             checkGhostEaten(ghost);
-
+            checkForGameOver();
         }, ghost.speed)
     }
 
@@ -214,6 +214,24 @@ document.addEventListener('DOMContentLoaded', ()=> {
             ghost.currentIndex = ghost.startIndex;
             score += 100;
             squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+        }
+    }
+
+    //check fot Game Over
+    function checkForGameOver() {
+        if (squares[pacmanCurrentIndex].classList.contains('ghost') && !squares[pacmanCurrentIndex].classList.contains('scard-ghost')) {
+            ghosts.forEach(ghost => clearInterval(ghost.timerId));
+            document.removeEventListener('keydown', movePacman);
+            scoreDisplay.innerText = 'Game Over';
+        }
+    }
+
+    //check for win
+    function checkForWin() {
+        if(score >= 274) {
+            ghosts.forEach(ghost => clearInterval(ghost.timerId));
+            document.removeEventListener('keydown', movePacman);
+            scoreDisplay.innerText = 'You Won!'
         }
     }
 })
