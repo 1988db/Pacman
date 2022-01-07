@@ -113,6 +113,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
         pacDotEaten()
         powerPelletEaten()
+        //check if the ghost is scared and packman runs into it
+        ghosts.forEach(ghost => checkGhostEaten(ghost));
         //checkForGameOver()
         //checkForWin
     }
@@ -199,15 +201,19 @@ document.addEventListener('DOMContentLoaded', ()=> {
                 squares[ghost.currentIndex].classList.add('scared-ghost')
             }
             
-            //if the ghost is scared and pacman runs into it
-            if(ghost.isScared && squares[ghost.currentIndex].classList.contains('pac-man')) {
-                squares[ghost.currentIndex].classList.remove(ghost.className, 'ghost', 'scared-ghost');
-                ghost.currentIndex = ghost.startIndex;
-                score += 100;
-                squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
-            }
+            //if the ghost is scared and ghost runs into pacman
+            checkGhostEaten(ghost);
 
         }, ghost.speed)
     }
 
+    //check if ghost is eaten
+    function checkGhostEaten(ghost) {
+        if(ghost.isScared && squares[ghost.currentIndex].classList.contains('pac-man')) {
+            squares[ghost.currentIndex].classList.remove(ghost.className, 'ghost', 'scared-ghost');
+            ghost.currentIndex = ghost.startIndex;
+            score += 100;
+            squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+        }
+    }
 })
