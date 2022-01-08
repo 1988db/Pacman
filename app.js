@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
     //starting position of pac-man
 
-    let pacmanCurrentIndex = 490;
+    let pacmanCurrentIndex = 29;
 
     squares[pacmanCurrentIndex].classList.add('pac-man');
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
     //function to move ghosts
 
-    /*function moveGhost(ghost) {
+    function moveGhost(ghost) {
         const directions = [-1, 1, width, -width];
         let direction = directions[Math.floor(Math.random() * directions.length)];
 
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
             checkGhostEaten(ghost);
             checkForGameOver();
         }, ghost.speed)
-    }*/
+    }
 
     //check if ghost is eaten
     function checkGhostEaten(ghost) {
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
     
     //get coordinates of Pacman or ghost
     function getCoordinates(index) {
-        return [index % width, Math.floor(index, width)]
+        return [index % width, Math.floor(index / width)];
 
     }
 
@@ -247,15 +247,15 @@ document.addEventListener('DOMContentLoaded', ()=> {
         const directions = [-1, +1, width, -width];
         let direction = directions[Math.floor(Math.random() * directions.length)];
         
-        function goGhost(ghost) {
-            if (!squares[ghost.currentIndex + direction].classList.contains('wall')) {
+        ghost.timerId = setInterval(function() {
+            if (!squares[ghost.currentIndex + direction].classList.contains('wall')  && !squares[ghost.currentIndex + direction].classList.contains('ghost')) {
                 //check if new position will be closer to pacman
                 const [ghostX, ghostY] = getCoordinates(ghost.currentIndex);
                 const [pacmanX, pacmanY] = getCoordinates(pacmanCurrentIndex);
                 const [ghostNewX, ghostNewY] = getCoordinates(ghost.currentIndex + direction);
 
                 function isXCoordCloser() {
-                    if (Math.abs(ghostNewX - pacmanX) < Math.abs(ghostX - pacmanX)) {
+                    if ((Math.abs(ghostNewX - pacmanX)) < (Math.abs(ghostX - pacmanX))) {
                         return true;
                     } else {
                         return false;
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
                 }
 
                 function isYCoordCloser() {
-                    if (Math.abs(ghostNewY - pacmanY) < Math.abs(ghostY - pacmanY)) {
+                    if ((Math.abs(ghostNewY - pacmanY)) < (Math.abs(ghostY - pacmanY))) {
                         return true;
                     } else {
                         return false;
@@ -285,9 +285,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
                     checkGhostEaten(ghost);
                     checkForGameOver();
                 } else {
-                    direction = directions[Math.floor(Math.random() * directions.length)];
-                    clearInterval(ghost.timerId);
-                    ghost.timerId = setInterval(goGhost(ghost), ghost.speed);
+                    direction = directions[Math.floor(Math.random() * directions.length)];                    
                 }
                 
                 
@@ -295,11 +293,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
             } else {
                 direction = directions[Math.floor(Math.random() * directions.length)];
-                clearInterval(ghost.timerId);
-                ghost.timerId = setInterval(goGhost(ghost), ghost.speed);
+                
             }
-        }
-
-        ghost.timerId = setInterval(goGhost(ghost), ghost.speed);
+        }, ghost.speed)       
     }
 })
