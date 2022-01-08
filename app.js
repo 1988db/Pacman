@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
         }
     }
 
-    ghosts = [
+    const ghosts = [
         new Ghost('blinky', 348, 250),
         new Ghost('pinky', 376, 400),
         new Ghost('inky', 351, 300),
@@ -174,11 +174,11 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
     //move ghosts randomly
 
-    ghosts.forEach(ghost => moveGhost(ghost));
+    ghosts.forEach(ghost => moveGhostSmart(ghost));
 
     //function to move ghosts
 
-    function moveGhost(ghost) {
+    /*function moveGhost(ghost) {
         const directions = [-1, 1, width, -width];
         let direction = directions[Math.floor(Math.random() * directions.length)];
 
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
             checkGhostEaten(ghost);
             checkForGameOver();
         }, ghost.speed)
-    }
+    }*/
 
     //check if ghost is eaten
     function checkGhostEaten(ghost) {
@@ -233,5 +233,73 @@ document.addEventListener('DOMContentLoaded', ()=> {
             document.removeEventListener('keydown', movePacman);
             scoreDisplay.innerText = 'You Won!'
         }
+    }
+    
+    //get coordinates of Pacman or ghost
+    function getCoordinates(index) {
+        return [index % width, Math.floor(index, width)]
+
+    }
+
+    //move ghost smartly
+
+    function moveGhostSmart(ghost) {
+        const directions = [-1, +1, width, -width];
+        let direction = directions[Math.floor(Math.random() * directions.length)];
+        
+        function goGhost(ghost) {
+            if (!squares[ghost.currentIndex + direction].classList.contains('wall')) {
+                //check if new position will be closer to pacman
+                const [ghostX, ghostY] = getCoordinates(ghost.currentIndex);
+                const [pacmanX, pacmanY] = getCoordinates(pacmanCurrentIndex);
+                const [ghostNewX, ghostNewY] = getCoordinates(ghost.currentIndex + direction);
+
+                function isXCoordCloser() {
+                    if (Math.abs(ghostNewX - pacmanX) < Math.abs(ghostX - pacmanX)) {
+                        return true;
+                    } else {
+                        return false;
+                    }                    
+                }
+
+                function isYCoordCloser() {
+                    if (Math.abs(ghostNewY - pacmanY) < Math.abs(ghostY - pacmanY)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                //you can go there if new position is closer to pacman
+                if (isXCoordCloser() || isYCoordCloser()) {
+                    //remove ghost class                    
+                    squares[ghost.currentIndex].classList.remove(ghost.className, 'ghost', 'scared-ghost');
+                    ghost.currentIndex += direction;
+                    squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+
+                    //if the ghost is currently scared
+                    if(ghost.isScared) {
+                        squares[ghost.currentIndex].classList.add('scared-ghost')
+                    }
+
+                    //if the ghost is scared and ghost runs into pacman
+                    checkGhostEaten(ghost);
+                    checkForGameOver();
+                } else {
+                    direction = directions[Math.floor(Math.random() * directions.length)];
+                    clearInterval(ghost.timerId);
+                    ghost.timerId = setInterval(goGhost(ghost), ghost.speed);
+                }
+                
+                
+
+
+            } else {
+                direction = directions[Math.floor(Math.random() * directions.length)];
+                clearInterval(ghost.timerId);
+                ghost.timerId = setInterval(goGhost(ghost), ghost.speed);
+            }
+        }
+
+        ghost.timerId = setInterval(goGhost(ghost), ghost.speed);
     }
 })
